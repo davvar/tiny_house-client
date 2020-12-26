@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { server } from '.'
 
 interface IState<TData> {
@@ -8,18 +8,21 @@ interface IState<TData> {
 	error: boolean
 }
 
-interface IQueryResult<TData> extends IState<TData> {
-	reFetch: () => Promise<void>
-}
+type MutationTuple<TData, TVariables> = [
+	(variables?: TVariables | undefined) => Promise<void>,
+	IState<TData>
+]
 
-export const useQuery = <TData = any>(query: string): IQueryResult<TData> => {
+export const useMutation = <TData = any, TVariables = any>(
+	query: string
+): MutationTuple<TData, TVariables> => {
 	const [state, setState] = useState<IState<TData>>({
 		data: null,
 		loading: false,
 		error: false,
 	})
 
-	const fetch = useCallback(async () => {
+	const fetch = async (variables?: TVariables) => {
 		try {
 			setState({
 				data: null,
@@ -27,7 +30,10 @@ export const useQuery = <TData = any>(query: string): IQueryResult<TData> => {
 				error: false,
 			})
 
-			const { data, errors } = await server.fetch<TData>({ query })
+			const { data, errors } = await server.fetch<TData, TVariables>({
+				query,
+				variables,
+			})
 
 			if (!isEmpty(errors)) {
 				throw new Error(errors[0].message)
@@ -39,14 +45,15 @@ export const useQuery = <TData = any>(query: string): IQueryResult<TData> => {
 				error: false,
 			})
 		} catch (err) {
-			setState({ data: null, loading: false, error: true })
+			setState({
+				data: null,
+				loading: false,
+				error: true,
+			})
+
 			throw console.error(err)
 		}
-	}, [query])
+	}
 
-	useEffect(() => {
-		fetch()
-	}, [fetch])
-
-	return { ...state, reFetch: fetch }
+	return [fetch, state]
 }

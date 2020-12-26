@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { server } from '../../lib/api'
+import { useMutation } from '../../lib/api/useMutation'
 import { useQuery } from '../../lib/api/useQuery'
 import {
 	DeleteListingsData,
@@ -37,14 +37,13 @@ interface IProps {
 
 export const Listings: FC<IProps> = ({ title }) => {
 	const { data, loading, error, reFetch } = useQuery<ListingsData>(LISTINGS)
+	const [
+		deleteListing,
+		{ loading: deleteListingLoading, error: deleteListingError },
+	] = useMutation<DeleteListingsData, DeleteListingsVariables>(DELETE_LISTINGS)
 
-	const deleteListing = (id: string) => () => {
-		server
-			.fetch<DeleteListingsData, DeleteListingsVariables>({
-				query: DELETE_LISTINGS,
-				variables: { id },
-			})
-			.then(reFetch)
+	const onDeleteListing = (id: string) => () => {
+		deleteListing({ id }).then(reFetch)
 	}
 
 	const listings = data ? data.listings : null
@@ -53,7 +52,9 @@ export const Listings: FC<IProps> = ({ title }) => {
 			{listings?.map(listing => (
 				<li key={listing.id}>
 					{listing.title}
-					<button onClick={deleteListing(listing.id)}>Delete a Listing</button>
+					<button onClick={onDeleteListing(listing.id)}>
+						Delete a Listing
+					</button>
 				</li>
 			))}
 		</ul>
@@ -67,10 +68,20 @@ export const Listings: FC<IProps> = ({ title }) => {
 		return <h1>Loading...</h1>
 	}
 
+	const deleteListingLoadingMessage = deleteListingLoading ? (
+		<h4>Deletion in progress...</h4>
+	) : null
+
+	const deleteListingErrorMessage = deleteListingError ? (
+		<h4>Something went wrong - please try again later</h4>
+	) : null
+
 	return (
 		<div>
 			<h2>{title}</h2>
 			{listingsList}
+			{deleteListingErrorMessage}
+			{deleteListingLoadingMessage}
 		</div>
 	)
 }
