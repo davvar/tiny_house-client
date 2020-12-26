@@ -1,13 +1,13 @@
+import { gql } from 'apollo-boost'
 import React, { FC } from 'react'
-import { useMutation } from '../../lib/api/useMutation'
-import { useQuery } from '../../lib/api/useQuery'
+import { useMutation, useQuery } from 'react-apollo'
+import { Listings as ListingsData } from './__generated__/Listings'
 import {
-	DeleteListingsData,
-	DeleteListingsVariables,
-	ListingsData,
-} from './types'
+	DeleteListing as DeleteListingData,
+	DeleteListingVariables,
+} from './__generated__/DeleteListing'
 
-const LISTINGS = `
+const LISTINGS = gql`
 	query Listings {
 		listings {
 			id
@@ -23,7 +23,7 @@ const LISTINGS = `
 	}
 `
 
-const DELETE_LISTINGS = `
+const DELETE_LISTINGS = gql`
 	mutation DeleteListing($id: ID!) {
 		deleteListing(id: $id) {
 			id
@@ -36,14 +36,14 @@ interface IProps {
 }
 
 export const Listings: FC<IProps> = ({ title }) => {
-	const { data, loading, error, reFetch } = useQuery<ListingsData>(LISTINGS)
+	const { data, loading, error, refetch } = useQuery<ListingsData>(LISTINGS)
 	const [
 		deleteListing,
 		{ loading: deleteListingLoading, error: deleteListingError },
-	] = useMutation<DeleteListingsData, DeleteListingsVariables>(DELETE_LISTINGS)
+	] = useMutation<DeleteListingData, DeleteListingVariables>(DELETE_LISTINGS)
 
 	const onDeleteListing = (id: string) => () => {
-		deleteListing({ id }).then(reFetch)
+		deleteListing({ variables: { id } }).then(refetch)
 	}
 
 	const listings = data ? data.listings : null
