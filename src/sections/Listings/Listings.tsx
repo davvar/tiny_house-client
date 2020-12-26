@@ -6,6 +6,9 @@ import {
 	DeleteListing as DeleteListingData,
 	DeleteListingVariables,
 } from './__generated__/DeleteListing'
+import './styles/index.css'
+import { Alert, Avatar, Button, List, Spin } from 'antd'
+import { ListingsSkeleton } from './components'
 
 const LISTINGS = gql`
 	query Listings {
@@ -42,46 +45,65 @@ export const Listings: FC<IProps> = ({ title }) => {
 		{ loading: deleteListingLoading, error: deleteListingError },
 	] = useMutation<DeleteListingData, DeleteListingVariables>(DELETE_LISTINGS)
 
-	const onDeleteListing = (id: string) => () => {
-		deleteListing({ variables: { id } }).then(refetch)
+	const onDeleteListing = (id: string) => async () => {
+		await deleteListing({ variables: { id } })
+		refetch()
 	}
 
 	const listings = data ? data.listings : null
-	const listingsList = (
-		<ul>
-			{listings?.map(listing => (
-				<li key={listing.id}>
-					{listing.title}
-					<button onClick={onDeleteListing(listing.id)}>
-						Delete a Listing
-					</button>
-				</li>
-			))}
-		</ul>
+	const listingsList = listings && (
+		<List
+			itemLayout='horizontal'
+			dataSource={listings}
+			renderItem={({ title, address, image, id }) => (
+				<List.Item
+					actions={[
+						<Button type='primary' onClick={onDeleteListing(id)}>
+							Delete
+						</Button>,
+					]}
+				>
+					<List.Item.Meta
+						title={title}
+						description={address}
+						avatar={<Avatar src={image} shape='square' size={48} />}
+					/>
+				</List.Item>
+			)}
+		/>
 	)
 
 	if (error) {
-		return <h1>Something went wrong...</h1>
+		return (
+			<div className='listings'>
+				<ListingsSkeleton error title={title} />
+			</div>
+		)
 	}
 
 	if (loading) {
-		return <h1>Loading...</h1>
+		return (
+			<div className='listings'>
+				<ListingsSkeleton title={title} />
+			</div>
+		)
 	}
 
-	const deleteListingLoadingMessage = deleteListingLoading ? (
-		<h4>Deletion in progress...</h4>
-	) : null
-
-	const deleteListingErrorMessage = deleteListingError ? (
-		<h4>Something went wrong - please try again later</h4>
-	) : null
+	const deleteListingErrorAlert = deleteListingError && (
+		<Alert
+			type='error'
+			message='Something went wrong - please try again later'
+			className='listings_alert'
+		/>
+	)
 
 	return (
-		<div>
-			<h2>{title}</h2>
-			{listingsList}
-			{deleteListingErrorMessage}
-			{deleteListingLoadingMessage}
+		<div className='listings'>
+			<Spin spinning={deleteListingLoading}>
+				{deleteListingErrorAlert}
+				<h2>{title}</h2>
+				{listingsList}
+			</Spin>
 		</div>
 	)
 }
