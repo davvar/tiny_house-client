@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import { server } from '../../lib/api'
+import { useQuery } from '../../lib/api/useQuery'
 import {
 	DeleteListingsData,
 	DeleteListingsVariables,
@@ -35,28 +36,41 @@ interface IProps {
 }
 
 export const Listings: FC<IProps> = ({ title }) => {
-	const fetchListings = async () => {
-		const { data } = await server.fetch<ListingsData>({ query: LISTINGS })
-		console.log(data);
+	const { data, loading, error, reFetch } = useQuery<ListingsData>(LISTINGS)
 
-		return data
+	const deleteListing = (id: string) => () => {
+		server
+			.fetch<DeleteListingsData, DeleteListingsVariables>({
+				query: DELETE_LISTINGS,
+				variables: { id },
+			})
+			.then(reFetch)
 	}
 
-	const deleteListing = async () => {
-		const { data } = await server.fetch<
-		DeleteListingsData,
-		DeleteListingsVariables
-		>({ query: DELETE_LISTINGS, variables: { id: '5fe5edda60c60166a71dc15c' } })
+	const listings = data ? data.listings : null
+	const listingsList = (
+		<ul>
+			{listings?.map(listing => (
+				<li key={listing.id}>
+					{listing.title}
+					<button onClick={deleteListing(listing.id)}>Delete a Listing</button>
+				</li>
+			))}
+		</ul>
+	)
 
-		console.log(data);
-		return data
+	if (error) {
+		return <h1>Something went wrong...</h1>
+	}
+
+	if (loading) {
+		return <h1>Loading...</h1>
 	}
 
 	return (
 		<div>
 			<h2>{title}</h2>
-			<button onClick={fetchListings}>Query Listings</button>
-			<button onClick={deleteListing}>Delete a Listing</button>
+			{listingsList}
 		</div>
 	)
 }
