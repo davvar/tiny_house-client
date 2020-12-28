@@ -1,5 +1,4 @@
 import { Affix, Layout, Spin } from 'antd'
-import Operation from 'antd/lib/transfer/operation'
 import ApolloClient from 'apollo-boost'
 import React, { useEffect, useRef, useState } from 'react'
 import { ApolloProvider, useMutation } from 'react-apollo'
