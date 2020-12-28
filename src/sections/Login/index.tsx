@@ -38,6 +38,7 @@ export const Login: FC<IProps> = ({ setViewer, history }) => {
 		onCompleted: data => {
 			if (data && data.logIn) {
 				setViewer(data.logIn)
+				window.sessionStorage.setItem('token', data.logIn.token!)
 				displaySuccessNotification("You've successfully logged in!")
 			}
 		},
@@ -64,11 +65,8 @@ export const Login: FC<IProps> = ({ setViewer, history }) => {
 
 	if (logInLoading) {
 		return (
-			<Content  className='log-in'>
-				<Spin
-					size='large'
-					tip='Logging you in...'
-				/>
+			<Content className='log-in'>
+				<Spin size='large' tip='Logging you in...' />
 			</Content>
 		)
 	}

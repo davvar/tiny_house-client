@@ -1,4 +1,5 @@
 import { Affix, Layout, Spin } from 'antd'
+import Operation from 'antd/lib/transfer/operation'
 import ApolloClient from 'apollo-boost'
 import React, { useEffect, useRef, useState } from 'react'
 import { ApolloProvider, useMutation } from 'react-apollo'
@@ -27,6 +28,14 @@ import './styles/index.css'
 
 const client = new ApolloClient({
 	uri: '/api',
+	request: async operation => {
+		const token = window.sessionStorage.getItem('token')
+		operation.setContext({
+			headers: {
+				'X-CSRF-TOKEN': token || '',
+			},
+		})
+	},
 })
 
 const initialViewer: IViewer = {
@@ -43,6 +52,10 @@ const App = () => {
 		onCompleted: data => {
 			if (data && data.logIn) {
 				setViewer(data.logIn)
+
+				data.logIn.token
+					? window.sessionStorage.setItem('token', data.logIn.token)
+					: window.sessionStorage.removeItem('token')
 			}
 		},
 	})
