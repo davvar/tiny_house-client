@@ -67,7 +67,16 @@ export const Login: FC<IProps> = ({ setViewer, history }) => {
 	if (logInLoading) {
 		return (
 			<Content>
-				<Spin size='large' tip='Logging you in...' />
+				<Spin
+					style={{
+						position: 'absolute',
+						top: '50%',
+						left: '50%',
+						transform: 'translate(-50%,-50%)',
+					}}
+					size='large'
+					tip='Logging you in...'
+				/>
 			</Content>
 		)
 	}
