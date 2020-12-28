@@ -24,6 +24,7 @@ export const MenuItems: FC<IProps> = ({ viewer, setViewer }) => {
 		onCompleted: data => {
 			if (data && data.logOut) {
 				setViewer(data.logOut)
+				window.sessionStorage.removeItem('token')
 				displaySuccessNotification("You've successfully logged out!")
 			}
 		},

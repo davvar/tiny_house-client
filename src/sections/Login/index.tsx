@@ -1,7 +1,5 @@
 import { Card, Layout, Spin, Typography } from 'antd'
-import { isEmpty } from 'lodash'
-// import { FetchResult } from 'apollo-boost'
-import React, { FC, useCallback, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import { useApolloClient, useMutation } from 'react-apollo'
 import { Redirect, RouteComponentProps, useLocation } from 'react-router-dom'
 import { ErrorBanner } from '../../lib/Components'
@@ -40,6 +38,7 @@ export const Login: FC<IProps> = ({ setViewer, history }) => {
 		onCompleted: data => {
 			if (data && data.logIn) {
 				setViewer(data.logIn)
+				window.sessionStorage.setItem('token', data.logIn.token!)
 				displaySuccessNotification("You've successfully logged in!")
 			}
 		},
@@ -66,17 +65,8 @@ export const Login: FC<IProps> = ({ setViewer, history }) => {
 
 	if (logInLoading) {
 		return (
-			<Content>
-				<Spin
-					style={{
-						position: 'absolute',
-						top: '50%',
-						left: '50%',
-						transform: 'translate(-50%,-50%)',
-					}}
-					size='large'
-					tip='Logging you in...'
-				/>
+			<Content className='log-in'>
+				<Spin size='large' tip='Logging you in...' />
 			</Content>
 		)
 	}
