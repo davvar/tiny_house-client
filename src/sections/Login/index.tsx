@@ -29,7 +29,7 @@ export function useQuery() {
 	return new URLSearchParams(useLocation().search)
 }
 
-export const Login: FC<IProps> = ({ setViewer, history }) => {
+export const Login: FC<IProps> = ({ setViewer }) => {
 	const client = useApolloClient()
 	const [
 		logIn,
