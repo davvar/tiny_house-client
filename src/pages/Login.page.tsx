@@ -1,14 +1,14 @@
 import { Card, Layout, Spin, Typography } from 'antd'
 import React, { FC, useEffect, useRef } from 'react'
 import { useApolloClient, useMutation } from 'react-apollo'
-import { Redirect, RouteComponentProps, useLocation } from 'react-router-dom'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { ErrorBanner } from '../Components'
 import { LOG_IN } from '../graphql/mutations'
 import {
 	LogIn as LogInData,
 	LogInVariables,
 } from '../graphql/mutations/LogIn/__generated__/LogIn'
-import { AUTH_URL } from '../graphql/queries/Authurl'
+import { AUTH_URL } from '../graphql/queries/Authurl/authUrl.query'
 import { AuthUrl as AuthUrlData } from '../graphql/queries/Authurl/__generated__/AuthUrl'
 
 import {
@@ -24,10 +24,6 @@ interface IProps extends RouteComponentProps {
 
 const { Content } = Layout
 const { Text, Title } = Typography
-
-export function useQuery() {
-	return new URLSearchParams(useLocation().search)
-}
 
 export const Login: FC<IProps> = ({ setViewer }) => {
 	const client = useApolloClient()
