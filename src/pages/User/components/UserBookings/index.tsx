@@ -26,7 +26,7 @@ export const UserBookings: FC<IProps> = ({
 	const userBookingsList = userBookings && (
 		<List
 			grid={{
-				gutter: 0,
+				gutter: 8,
 				xs: 1,
 				sm: 2,
 				lg: 4,

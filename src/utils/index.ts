@@ -17,3 +17,9 @@ export const displaySuccessNotification = (
 export const displayErrorMessage = (error: string) => {
 	return message.error(error)
 }
+
+export const formatListingPrice = (price: number, round = true) => {
+	return `$${round ? Math.round(price / 100) : price / 100}`
+}
+
+export const iconColor = '#1890ff'

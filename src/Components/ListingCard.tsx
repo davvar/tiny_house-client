@@ -3,6 +3,8 @@ import { Card } from 'antd'
 import Title from 'antd/lib/typography/Title'
 import Text from 'antd/lib/typography/Text'
 import React, { FC } from 'react'
+import { formatListingPrice, iconColor } from 'utils'
+import { Link } from 'react-router-dom'
 
 interface IProps {
 	listing: {
@@ -16,34 +18,36 @@ interface IProps {
 }
 
 export const ListingCard: FC<IProps> = ({ listing }) => {
-	const { address, image, numOfGuests, price, title } = listing
+	const { address, image, numOfGuests, price, title, id } = listing
 	return (
-		<Card
-			hoverable
-			cover={
-				<div
-					style={{ background: `url${image}` }}
-					className='listing-card__cover-img'
-				></div>
-			}
-		>
-			<div className='listing-card__details'>
-				<div className='listing-card__description'>
-					<Title level={4} className='listing-price'>
-						{price} <span>/day</span>
-					</Title>
-					<Text strong ellipsis className='listing-title'>
-						{title}
-					</Text>
-					<Text strong ellipsis className='listing-address'>
-						{address}
-					</Text>
+		<Link to={`/listing/${id}`}>
+			<Card
+				hoverable
+				cover={
+					<div
+						style={{ background: `url(${image})` }}
+						className='listing-card__cover-img'
+					></div>
+				}
+			>
+				<div className='listing-card__details'>
+					<div className='listing-card__description'>
+						<Title level={4} className='listing-card__price'>
+							{formatListingPrice(price)} <span>/day</span>
+						</Title>
+						<Text ellipsis className='listing-card__title'>
+							{title}
+						</Text>
+						<Text ellipsis className='listing-card__address'>
+							{address}
+						</Text>
+					</div>
+					<div className='listing-card__dimensions listing-card__dimensions--guests'>
+						<UserOutlined style={{ color: iconColor, marginRight: 5 }} />
+						<Text>{numOfGuests} guests</Text>
+					</div>
 				</div>
-				<div className='listing-card__dimension listing-card__dimension--guests'>
-					<UserOutlined />
-					<Text>{numOfGuests} guests.</Text>
-				</div>
-			</div>
-		</Card>
+			</Card>
+		</Link>
 	)
 }

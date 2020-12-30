@@ -23,7 +23,7 @@ export const UserListings: FC<IProps> = ({
 	const userListingsList = (
 		<List
 			grid={{
-				gutter: 0,
+				gutter: 8,
 				xs: 1,
 				sm: 2,
 				lg: 4,
