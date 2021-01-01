@@ -1,9 +1,9 @@
-import { Header } from 'antd/lib/layout/layout'
-import React, { FC } from 'react'
-import { Link } from 'react-router-dom'
-import { MenuItems } from './components/MenuItems'
-import logo from 'assets/images/tinyhouse-logo.png'
-
+import { Header } from 'antd/lib/layout/layout';
+import logo from 'assets/images/tinyhouse-logo.png';
+import React, { FC } from 'react';
+import { Link } from 'react-router-dom';
+import { IViewer } from '__generated__/graphql';
+import { MenuItems } from './components/MenuItems';
 
 interface IProps {
 	viewer: IViewer

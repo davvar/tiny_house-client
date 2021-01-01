@@ -1,38 +1,37 @@
-import { gql } from 'apollo-boost'
-import React, { FC } from 'react'
-import { useMutation, useQuery } from 'react-apollo'
-import { Listings as ListingsData } from './__generated__/Listings'
-import {
-	DeleteListing as DeleteListingData,
-	DeleteListingVariables,
-} from './__generated__/DeleteListing'
-import 'styles/Listings.css'
-import { Alert, Avatar, Button, List, Spin } from 'antd'
+// import { useMutation, useQuery } from '@apollo/client'
+import { Alert, Avatar, Button, List, Spin } from 'antd';
+import React, { FC } from 'react';
+// import { Listings as ListingsData } from './__generated__/Listings'
+// import {
+// 	DeleteListing as DeleteListingData,
+// 	DeleteListingVariables,
+// } from './__generated__/DeleteListing'
+import 'styles/Listings.css';
 import { ListingsSkeleton } from './components/ListingsSkeleton';
 
-const LISTINGS = gql`
-	query Listings {
-		listings {
-			id
-			title
-			image
-			address
-			price
-			numOfGuests
-			numOfBeds
-			numOfBaths
-			rating
-		}
-	}
-`
+// const LISTINGS = gql`
+// 	query Listings {
+// 		listings {
+// 			id
+// 			title
+// 			image
+// 			address
+// 			price
+// 			numOfGuests
+// 			numOfBeds
+// 			numOfBaths
+// 			rating
+// 		}
+// 	}
+// `
 
-const DELETE_LISTINGS = gql`
-	mutation DeleteListing($id: ID!) {
-		deleteListing(id: $id) {
-			id
-		}
-	}
-`
+// const DELETE_LISTINGS = gql`
+// 	mutation DeleteListing($id: ID!) {
+// 		deleteListing(id: $id) {
+// 			id
+// 		}
+// 	}
+// `
 
 interface IProps {
 	title: string

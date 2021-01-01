@@ -1,5 +1,5 @@
 export * from './Listings'
-export * from './Listing.page'
+export * from './Listing/Listing.page'
 export * from './Home.page'
 export * from './Host.page'
 export * from './NotFound.page'

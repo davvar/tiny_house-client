@@ -1,22 +1,16 @@
 import { Card, Layout, Spin, Typography } from 'antd'
 import React, { FC, useEffect, useRef } from 'react'
-import { useApolloClient, useMutation } from 'react-apollo'
-import { Redirect, RouteComponentProps, useLocation } from 'react-router-dom'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { ErrorBanner } from '../Components'
-import { LOG_IN } from '../graphql/mutations'
-import {
-	LogIn as LogInData,
-	LogInVariables,
-} from '../graphql/mutations/LogIn/__generated__/LogIn'
-import { AUTH_URL } from '../graphql/queries/Authurl'
-import { AuthUrl as AuthUrlData } from '../graphql/queries/Authurl/__generated__/AuthUrl'
 
-import {
-	displayErrorMessage,
-	displaySuccessNotification,
-} from '../utils'
+import { displayErrorMessage, displaySuccessNotification } from '../utils'
 
 import googleLogo from 'assets/images/google_logo.jpg'
+import {
+	IViewer,
+	useAuthUrlLazyQuery,
+	useLogInMutation,
+} from '__generated__/graphql'
 
 interface IProps extends RouteComponentProps {
 	setViewer: (viewer: IViewer) => void
@@ -25,16 +19,13 @@ interface IProps extends RouteComponentProps {
 const { Content } = Layout
 const { Text, Title } = Typography
 
-export function useQuery() {
-	return new URLSearchParams(useLocation().search)
-}
-
 export const Login: FC<IProps> = ({ setViewer }) => {
-	const client = useApolloClient()
+	const [authorize, authQuery] = useAuthUrlLazyQuery()
+
 	const [
 		logIn,
 		{ data: logInData, loading: logInLoading, error: logInError },
-	] = useMutation<LogInData, LogInVariables>(LOG_IN, {
+	] = useLogInMutation({
 		onCompleted: data => {
 			if (data && data.logIn) {
 				setViewer(data.logIn)
@@ -44,6 +35,14 @@ export const Login: FC<IProps> = ({ setViewer }) => {
 		},
 	})
 
+	useEffect(() => {
+		if (authQuery.data) {
+			window.location.href = authQuery.data.authUrl
+		} else if (authQuery.error) {
+			displayErrorMessage("Sorry! We weren't able to log you in.")
+		}
+	}, [authQuery.data, authQuery.error])
+
 	const logInRef = useRef(logIn)
 	useEffect(() => {
 		const code = new URL(window.location.href).searchParams.get('code')
@@ -52,16 +51,6 @@ export const Login: FC<IProps> = ({ setViewer }) => {
 			logInRef.current({ variables: { input: { code } } })
 		}
 	}, [])
-
-	const handleAuthorize = async () => {
-		try {
-			const { data } = await client.query<AuthUrlData>({ query: AUTH_URL })
-
-			window.location.href = data.authUrl
-		} catch (error) {
-			displayErrorMessage("Sorry! We weren't able to log you in.")
-		}
-	}
 
 	if (logInLoading) {
 		return (
@@ -73,7 +62,7 @@ export const Login: FC<IProps> = ({ setViewer }) => {
 
 	if (logInData && logInData.logIn) {
 		const { id: viewerId } = logInData.logIn
-		return <Redirect to={`/users/${viewerId}`} />
+		return <Redirect to={`/user/${viewerId}`} />
 	}
 
 	const logInErrorBannerElement = logInError && (
@@ -96,7 +85,10 @@ export const Login: FC<IProps> = ({ setViewer }) => {
 					<Text>Sign in with Google to start booking available rentals</Text>
 				</div>
 				<button
-					onClick={handleAuthorize}
+					onClick={() => {
+						console.log('clicked')
+						authorize()
+					}}
 					className='log-in-card__google-button'
 				>
 					<img
