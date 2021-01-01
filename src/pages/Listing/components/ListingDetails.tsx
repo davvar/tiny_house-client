@@ -1,16 +1,27 @@
-import { EnvironmentOutlined } from '@ant-design/icons'
-import { Avatar, Divider, Tag } from 'antd'
-import Paragraph from 'antd/lib/typography/Paragraph'
-import Title from 'antd/lib/typography/Title'
-import { Listing as ListingData } from 'graphql/queries/Listing/__generated__/Listing'
-import React, { FC } from 'react'
+import { EnvironmentOutlined } from '@ant-design/icons';
+import { Avatar, Divider, Tag, Typography } from 'antd';
+import React, { FC } from 'react';
+import { Link } from 'react-router-dom';
+import { iconColor } from 'utils';
+import { IListing } from '__generated__/graphql';
+
+const { Title, Paragraph } = Typography
 
 interface IProps {
-	listing: ListingData['listing']
+	listing: IListing
 }
 
 export const ListingDetails: FC<IProps> = ({ listing }) => {
-	const { address, type, city, description, host, image, numOfGuests, title, } = listing
+	const {
+		address,
+		type,
+		city,
+		description,
+		host,
+		image,
+		numOfGuests,
+		title,
+	} = listing
 
 	return (
 		<div className='listing-details'>
@@ -24,7 +35,9 @@ export const ListingDetails: FC<IProps> = ({ listing }) => {
 					ellipsis
 					className='listing-details__city-address'
 				>
-					<EnvironmentOutlined /> {city}
+					<Link to={`/listings/${city}`}>
+						<EnvironmentOutlined style={{ color: iconColor }} /> {city}
+					</Link>
 					<Divider type='vertical' />
 					{address}
 				</Paragraph>
@@ -32,11 +45,14 @@ export const ListingDetails: FC<IProps> = ({ listing }) => {
 					{title}
 				</Title>
 			</div>
+			<Divider />
 			<div className='listing-details__section'>
-				<Avatar src={host.avatar} size={64} />
-				<Title level={2} className='listing-details__host-name'>
-					{host.name}
-				</Title>
+				<Link to={`/user/${host.id}`}>
+					<Avatar src={host.avatar} size={64} />
+					<Title level={2} className='listing-details__host-name'>
+						{host.name}
+					</Title>
+				</Link>
 			</div>
 
 			<Divider />

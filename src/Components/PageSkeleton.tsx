@@ -1,5 +1,5 @@
-import { Skeleton } from 'antd'
-import React from 'react'
+import { Skeleton } from 'antd';
+import React from 'react';
 
 export const PageSkeleton = () => {
 	const skeletonParagraph = (

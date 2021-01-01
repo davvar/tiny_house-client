@@ -2,13 +2,13 @@ import List from 'antd/lib/list'
 import Paragraph from 'antd/lib/typography/Paragraph'
 import Text from 'antd/lib/typography/Text'
 import Title from 'antd/lib/typography/Title'
+import { ListingCard } from 'Components';
+import { IBookings } from '__generated__/graphql'
 import { get } from 'lodash'
 import React, { FC } from 'react'
-import { ListingCard } from '../../../../Components'
-import { User } from '../../../../graphql/queries/User/__generated__/User'
 
 interface IProps {
-	userBookings: User['user']['bookings']
+	userBookings: IBookings
 	bookingsPage: number
 	setBookingsPage: (page: number) => void
 	limit: number

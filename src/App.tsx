@@ -1,15 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { useMutation } from 'react-apollo'
-import { LOG_IN } from './graphql/mutations'
 import { Home, Host, Listing, Listings, Login, NotFound, User } from './pages'
 import { AppHeader, AppHeaderSkeleton, ErrorBanner } from './Components'
-import {
-	LogIn as ILogInData,
-	LogInVariables as ILogInVariables,
-} from './graphql/mutations/LogIn/__generated__/LogIn'
 import Layout from 'antd/lib/layout/layout'
 import { Affix, Spin } from 'antd'
+import { IViewer, useLogInMutation } from '__generated__/graphql'
 
 const initialViewer: IViewer = {
 	id: null,
@@ -21,7 +16,8 @@ const initialViewer: IViewer = {
 
 export const App = () => {
 	const [viewer, setViewer] = useState<IViewer>(initialViewer)
-	const [logIn, { error }] = useMutation<ILogInData, ILogInVariables>(LOG_IN, {
+
+	const [logIn, { error }] = useLogInMutation({
 		onCompleted: data => {
 			if (data && data.logIn) {
 				setViewer(data.logIn)

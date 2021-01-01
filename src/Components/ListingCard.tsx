@@ -1,10 +1,10 @@
-import { UserOutlined } from '@ant-design/icons'
-import { Card } from 'antd'
-import Title from 'antd/lib/typography/Title'
-import Text from 'antd/lib/typography/Text'
-import React, { FC } from 'react'
-import { formatListingPrice, iconColor } from 'utils'
-import { Link } from 'react-router-dom'
+import { UserOutlined } from '@ant-design/icons';
+import { Card, Typography } from 'antd';
+import React, { FC } from 'react';
+import { Link } from 'react-router-dom';
+import { formatListingPrice, iconColor } from 'utils';
+
+const { Text, Title } = Typography
 
 interface IProps {
 	listing: {
@@ -42,7 +42,7 @@ export const ListingCard: FC<IProps> = ({ listing }) => {
 							{address}
 						</Text>
 					</div>
-					<div className='listing-card__dimensions listing-card__dimensions--guests'>
+					<div className='listing-card__dimensions listing-card__dimensions-guests'>
 						<UserOutlined style={{ color: iconColor, marginRight: 5 }} />
 						<Text>{numOfGuests} guests</Text>
 					</div>

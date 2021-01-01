@@ -1,6 +1,5 @@
-import React from 'react'
-import { Alert } from 'antd'
-import { FC } from 'react'
+import { Alert } from 'antd';
+import React, { FC } from 'react';
 
 interface IProps {
 	message?: string

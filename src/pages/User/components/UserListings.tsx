@@ -1,12 +1,12 @@
 import { List } from 'antd'
 import Paragraph from 'antd/lib/typography/Paragraph'
 import Title from 'antd/lib/typography/Title'
+import { IListings } from '__generated__/graphql';
 import React, { FC } from 'react'
-import { ListingCard } from '../../../../Components'
-import { User } from '../../../../graphql/queries/User/__generated__/User'
+import { ListingCard } from '../../../Components'
 
 interface IProps {
-	userListings: User['user']['listings']
+	userListings: IListings
 	listingsPage: number
 	setListingsPage: (page: number) => void
 	limit: number

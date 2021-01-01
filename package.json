@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
+    "@apollo/client": "^3.3.6",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -14,11 +15,10 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.6",
     "antd": "^4.9.4",
-    "apollo-boost": "^0.4.9",
     "graphql": "^15.4.0",
     "lodash": "^4.17.20",
+    "moment": "^2.29.1",
     "react": "^17.0.1",
-    "react-apollo": "^3.1.5",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
@@ -30,8 +30,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "codegen:schema": "npx apollo client:download-schema --endpoint=http://localhost:9000/api",
-    "codegen:generate": "npx apollo client:codegen --localSchemaFile=schema.json --includes=src/**/*.ts --globalTypesFile=./src/graphql/globalTypes.ts --target=typescript"
+    "codegen:generate": "graphql-codegen --config codegen.yml",
+    "a": "graphql-codegen init"
   },
   "eslintConfig": {
     "extends": [
@@ -51,5 +51,12 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:9000"
+  "proxy": "http://localhost:9000",
+  "devDependencies": {
+    "@graphql-codegen/cli": "1.20.0",
+    "@graphql-codegen/introspection": "1.18.1",
+    "@graphql-codegen/typescript": "1.20.0",
+    "@graphql-codegen/typescript-operations": "1.17.13",
+    "@graphql-codegen/typescript-react-apollo": "2.2.1"
+  }
 }

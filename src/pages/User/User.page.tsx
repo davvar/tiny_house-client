@@ -1,16 +1,10 @@
 import { Col, Row } from 'antd'
 import { Content } from 'antd/lib/layout/layout'
+import { IBookings, IListings, IUser, IViewer, useUserQuery } from '__generated__/graphql'
 import { get } from 'lodash'
 import React, { FC, useState } from 'react'
-import { useQuery } from 'react-apollo'
 import { RouteComponentProps } from 'react-router-dom'
 import { PageSkeleton, ErrorBanner } from '../../Components'
-import { USER } from '../../graphql/queries'
-import {
-	User as IUserData,
-	UserVariables as IUserVariables,
-} from '../../graphql/queries/User/__generated__/User'
-
 import { UserBookings, UserListings, UserProfile } from './components'
 
 const PAGE_LIMIT = 4
@@ -26,7 +20,8 @@ interface IProps extends RouteComponentProps<IMatchParams> {
 export const User: FC<IProps> = ({ viewer, match }) => {
 	const [listingsPage, setListingsPage] = useState(1)
 	const [bookingsPage, setBookingsPage] = useState(1)
-	const { data, loading, error } = useQuery<IUserData, IUserVariables>(USER, {
+
+	const { data, loading, error } = useUserQuery({
 		variables: {
 			id: match.params.id,
 			bookingsPage,
@@ -62,7 +57,7 @@ export const User: FC<IProps> = ({ viewer, match }) => {
 		<UserListings
 			setListingsPage={setListingsPage}
 			listingsPage={listingsPage}
-			userListings={userListings}
+			userListings={userListings as IListings}
 			limit={PAGE_LIMIT}
 		/>
 	)
@@ -70,13 +65,13 @@ export const User: FC<IProps> = ({ viewer, match }) => {
 		<UserBookings
 			setBookingsPage={setBookingsPage}
 			bookingsPage={bookingsPage}
-			userBookings={userBookings}
+			userBookings={userBookings as IBookings}
 			limit={PAGE_LIMIT}
 		/>
 	)
 
 	const userProfileElement = user ? (
-		<UserProfile viewerIsUser={viewerIsUser} user={user} />
+		<UserProfile viewerIsUser={viewerIsUser} user={user as IUser} />
 	) : null
 
 	return (

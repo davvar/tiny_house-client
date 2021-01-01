@@ -4,10 +4,10 @@ import Paragraph from 'antd/lib/typography/Paragraph'
 import Title from 'antd/lib/typography/Title'
 import Text from 'antd/lib/typography/Text'
 import React, { FC } from 'react'
-import { User as IUserData } from '../../../../graphql/queries/User/__generated__/User'
+import { IUser } from '__generated__/graphql';
 
 interface IProps {
-	user: IUserData['user']
+	user: IUser
 	viewerIsUser: boolean
 }
 

@@ -1,6 +1,6 @@
-import { Alert, Divider, Skeleton } from 'antd'
-import React, { FC } from 'react'
-import 'styles/ListingsSkeleton.css'
+import { Alert, Divider, Skeleton } from 'antd';
+import React, { FC } from 'react';
+import 'styles/ListingsSkeleton.css';
 
 interface IProps {
 	title: string
