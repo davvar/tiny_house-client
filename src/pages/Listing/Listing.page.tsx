@@ -1,11 +1,16 @@
+import { useQuery } from '@apollo/client';
 import { Col, Layout, Row } from 'antd';
 import { ErrorBanner, PageSkeleton } from 'Components';
+import { LISTING } from 'graphql/queries';
 import { get } from 'lodash';
 import { Moment } from 'moment';
 import React, { FC, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { IBookings, IListing, useListingQuery } from '__generated__/graphql';
-import { ListingBookings, ListingCreateBookings, ListingDetails } from './components';
+import {
+	ListingBookings,
+	ListingCreateBookings,
+	ListingDetails
+} from './components';
 
 const { Content } = Layout
 
@@ -22,7 +27,7 @@ export const Listing: FC<IProps> = ({ match }) => {
 	const [checkInDate, setCheckInDate] = useState<Moment | null>(null)
 	const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null)
 
-	const { data, loading, error } = useListingQuery({
+	const { data, loading, error } = useQuery<IListingQuery ,IListingQueryVariables>(LISTING, {
 		variables: {
 			bookingsPage,
 			id: match.params.id,

@@ -2,7 +2,6 @@ import { Avatar, Divider, List, Typography } from 'antd';
 import { get } from 'lodash';
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { IBookings } from '__generated__/graphql';
 
 const { Text, Title } = Typography
 

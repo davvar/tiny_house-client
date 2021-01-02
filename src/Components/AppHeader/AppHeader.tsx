@@ -2,8 +2,7 @@ import { Header } from 'antd/lib/layout/layout';
 import logo from 'assets/images/tinyhouse-logo.png';
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { IViewer } from '__generated__/graphql';
-import { MenuItems } from './components/MenuItems';
+import { MenuItems } from './components';
 
 interface IProps {
 	viewer: IViewer

@@ -1,11 +1,12 @@
-import { Col, Row } from 'antd'
-import { Content } from 'antd/lib/layout/layout'
-import { IBookings, IListings, IUser, IViewer, useUserQuery } from '__generated__/graphql'
-import { get } from 'lodash'
-import React, { FC, useState } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
-import { PageSkeleton, ErrorBanner } from '../../Components'
-import { UserBookings, UserListings, UserProfile } from './components'
+import { useQuery } from '@apollo/client';
+import { Col, Row } from 'antd';
+import { Content } from 'antd/lib/layout/layout';
+import { ErrorBanner, PageSkeleton } from 'Components';
+import { USER } from 'graphql/queries';
+import { get } from 'lodash';
+import React, { FC, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+import { UserBookings, UserListings, UserProfile } from './components';
 
 const PAGE_LIMIT = 4
 
@@ -21,7 +22,7 @@ export const User: FC<IProps> = ({ viewer, match }) => {
 	const [listingsPage, setListingsPage] = useState(1)
 	const [bookingsPage, setBookingsPage] = useState(1)
 
-	const { data, loading, error } = useUserQuery({
+	const { data, loading, error } = useQuery<IQueryUserArgs>(USER, {
 		variables: {
 			id: match.params.id,
 			bookingsPage,
@@ -61,6 +62,7 @@ export const User: FC<IProps> = ({ viewer, match }) => {
 			limit={PAGE_LIMIT}
 		/>
 	)
+
 	const userBookingsElement = userBookings && (
 		<UserBookings
 			setBookingsPage={setBookingsPage}

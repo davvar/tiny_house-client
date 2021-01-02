@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { Home, Host, Listing, Listings, Login, NotFound, User } from './pages'
-import { AppHeader, AppHeaderSkeleton, ErrorBanner } from './Components'
-import Layout from 'antd/lib/layout/layout'
-import { Affix, Spin } from 'antd'
-import { IViewer, useLogInMutation } from '__generated__/graphql'
+import { useMutation } from '@apollo/client';
+import { Affix, Layout, Spin } from 'antd';
+import { AppHeader, AppHeaderSkeleton, ErrorBanner } from 'Components';
+import { LOG_IN } from 'graphql/mutations';
+import { Home, Host, Listing, Listings, Login, NotFound, User } from 'pages';
+import React, { useEffect, useRef, useState } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 const initialViewer: IViewer = {
 	id: null,
@@ -12,27 +12,27 @@ const initialViewer: IViewer = {
 	avatar: null,
 	hasWallet: null,
 	didRequest: false,
-}
+};
 
 export const App = () => {
-	const [viewer, setViewer] = useState<IViewer>(initialViewer)
+	const [viewer, setViewer] = useState<IViewer>(initialViewer);
 
-	const [logIn, { error }] = useLogInMutation({
+	const [logIn, { error }] = useMutation<ILogInMutation, ILogInMutationVariables>(LOG_IN, {
 		onCompleted: data => {
 			if (data && data.logIn) {
-				setViewer(data.logIn)
+				setViewer(data.logIn);
 
 				data.logIn.token
 					? window.sessionStorage.setItem('token', data.logIn.token)
-					: window.sessionStorage.removeItem('token')
+					: window.sessionStorage.removeItem('token');
 			}
 		},
-	})
+	});
 
-	const logInRef = useRef(logIn)
+	const logInRef = useRef(logIn);
 	useEffect(() => {
-		logInRef.current()
-	}, [])
+		logInRef.current();
+	}, []);
 
 	if (!viewer.didRequest && !error) {
 		return (
@@ -42,12 +42,12 @@ export const App = () => {
 					<Spin size='large' tip='Launching TinyHouse' />
 				</div>
 			</Layout>
-		)
+		);
 	}
 
 	const logInErrorBannerElement = error && (
 		<ErrorBanner description="We weren't able to verify if you were logged in. Please try again later." />
-	)
+	);
 
 	return (
 		<Router>
@@ -74,5 +74,5 @@ export const App = () => {
 				</Switch>
 			</Layout>
 		</Router>
-	)
-}
+	);
+};

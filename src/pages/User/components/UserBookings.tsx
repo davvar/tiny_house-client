@@ -1,11 +1,9 @@
-import List from 'antd/lib/list'
-import Paragraph from 'antd/lib/typography/Paragraph'
-import Text from 'antd/lib/typography/Text'
-import Title from 'antd/lib/typography/Title'
-import { ListingCard } from 'Components';
-import { IBookings } from '__generated__/graphql'
-import { get } from 'lodash'
-import React, { FC } from 'react'
+import { List, Typography } from 'antd';
+import { ListingCard } from 'Components/ListingCard';
+import { get } from 'lodash';
+import React, { FC } from 'react';
+
+const { Paragraph, Text, Title } = Typography
 
 interface IProps {
 	userBookings: IBookings
