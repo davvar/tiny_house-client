@@ -30,10 +30,10 @@ export const ListingCard: FC<IProps> = ({ listing }) => {
 						<Title level={4} className='listing-card__price'>
 							{formatListingPrice(price)} <span>/day</span>
 						</Title>
-						<Text ellipsis className='listing-card__title'>
+						<Text strong ellipsis className='listing-card__address'>
 							{title}
 						</Text>
-						<Text ellipsis className='listing-card__address'>
+						<Text ellipsis className='listing-card__location'>
 							{address}
 						</Text>
 					</div>
