@@ -1,8 +1,8 @@
-import { Header } from 'antd/lib/layout/layout'
-import React, { FC } from 'react'
-import logo from 'assets/images/tinyhouse-logo.png'
+import { Header } from 'antd/lib/layout/layout';
+import logo from 'assets/images/tinyhouse-logo.png';
+import React from 'react';
 
-export const AppHeaderSkeleton: FC<{}> = () => {
+export const AppHeaderSkeleton = () => {
 	return (
 		<Header className='app-header'>
 			<div className='app-header__logo-search-section'>

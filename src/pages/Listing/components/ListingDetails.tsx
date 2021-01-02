@@ -3,7 +3,6 @@ import { Avatar, Divider, Tag, Typography } from 'antd';
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { iconColor } from 'utils';
-import { IListing } from '__generated__/graphql';
 
 const { Title, Paragraph } = Typography
 

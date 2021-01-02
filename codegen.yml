@@ -1,17 +1,17 @@
 overwrite: true
 schema: "http://localhost:9000/api"
 documents: "src/graphql/**"
-# watch: true
 generates:
-  src/'__generated__/graphql'/index.ts:
+  src/typings/index.d.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
-      - "typescript-react-apollo"
+      # - "typescript-react-apollo"
     config:
       typesPrefix: I
       skipTypename: true
-      useTypeImports: true
+      noExport: true
+      enumsAsTypes: true
   ./graphql.schema.json:
     plugins:
       - "introspection"

@@ -1,9 +1,9 @@
 import { HomeOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Menu } from 'antd';
-import Avatar from 'antd/lib/avatar/avatar';
+import { useMutation } from '@apollo/client';
+import { Avatar, Button, Menu } from 'antd';
+import { LOG_OUT } from 'graphql/mutations';
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { IViewer, useLogOutMutation } from '__generated__/graphql';
 import { displayErrorMessage, displaySuccessNotification } from '../../../utils';
 
 interface IProps {
@@ -14,25 +14,24 @@ interface IProps {
 const { Item, SubMenu } = Menu
 
 export const MenuItems: FC<IProps> = ({ viewer, setViewer }) => {
-	const [logOut] = useLogOutMutation({
-		onCompleted: data => {
-			if (data && data.logOut) {
-				setViewer(data.logOut)
-				window.sessionStorage.removeItem('token')
-				displaySuccessNotification("You've successfully logged out!")
-			}
-		},
+	const [logOut] = useMutation<ILogOutMutation, ILogOutMutationVariables>(
+		LOG_OUT,
+		{
+			onCompleted: data => {
+				if (data && data.logOut) {
+					setViewer(data.logOut)
+					window.sessionStorage.removeItem('token')
+					displaySuccessNotification("You've successfully logged out!")
+				}
+			},
 
-		onError: () => {
-			displayErrorMessage(
-				"Sorry! We weren't able to log you out. Please try again later."
-			)
-		},
-	})
-
-	const handleLogOut = () => {
-		logOut()
-	}
+			onError: () => {
+				displayErrorMessage(
+					"Sorry! We weren't able to log you out. Please try again later."
+				)
+			},
+		}
+	)
 
 	const SubMenuLogin = viewer.id ? (
 		<SubMenu title={<Avatar src={viewer.avatar} />}>
@@ -43,7 +42,7 @@ export const MenuItems: FC<IProps> = ({ viewer, setViewer }) => {
 				</Link>
 			</Item>
 			<Item key='/logout'>
-				<div onClick={handleLogOut}>
+				<div onClick={() => logOut()}>
 					<LogoutOutlined />
 					Logout
 				</div>

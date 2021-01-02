@@ -1,10 +1,7 @@
-import { Button, Card, Divider } from 'antd'
-import Avatar from 'antd/lib/avatar/avatar'
-import Paragraph from 'antd/lib/typography/Paragraph'
-import Title from 'antd/lib/typography/Title'
-import Text from 'antd/lib/typography/Text'
-import React, { FC } from 'react'
-import { IUser } from '__generated__/graphql';
+import { Avatar, Button, Card, Divider, Typography } from 'antd';
+import React, { FC } from 'react';
+
+const { Paragraph, Text, Title } = Typography
 
 interface IProps {
 	user: IUser

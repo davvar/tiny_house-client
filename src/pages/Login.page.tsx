@@ -1,16 +1,12 @@
-import { Card, Layout, Spin, Typography } from 'antd'
-import React, { FC, useEffect, useRef } from 'react'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
-import { ErrorBanner } from '../Components'
-
-import { displayErrorMessage, displaySuccessNotification } from '../utils'
-
-import googleLogo from 'assets/images/google_logo.jpg'
-import {
-	IViewer,
-	useAuthUrlLazyQuery,
-	useLogInMutation,
-} from '__generated__/graphql'
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { Card, Layout, Spin, Typography } from 'antd';
+import googleLogo from 'assets/images/google_logo.jpg';
+import { ErrorBanner } from 'Components';
+import { LOG_IN } from 'graphql/mutations';
+import { USER_AUTH } from 'graphql/queries';
+import React, { FC, useEffect, useRef } from 'react';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
+import { displayErrorMessage, displaySuccessNotification } from 'utils';
 
 interface IProps extends RouteComponentProps {
 	setViewer: (viewer: IViewer) => void
@@ -20,12 +16,12 @@ const { Content } = Layout
 const { Text, Title } = Typography
 
 export const Login: FC<IProps> = ({ setViewer }) => {
-	const [authorize, authQuery] = useAuthUrlLazyQuery()
+	const [authorize, authQuery] = useLazyQuery<IAuthUrlQuery>(USER_AUTH)
 
-	const [
-		logIn,
-		{ data: logInData, loading: logInLoading, error: logInError },
-	] = useLogInMutation({
+	const [logIn, logInRes] = useMutation<
+		ILogInMutation,
+		ILogInMutationVariables
+	>(LOG_IN, {
 		onCompleted: data => {
 			if (data && data.logIn) {
 				setViewer(data.logIn)
@@ -52,7 +48,7 @@ export const Login: FC<IProps> = ({ setViewer }) => {
 		}
 	}, [])
 
-	if (logInLoading) {
+	if (logInRes.loading) {
 		return (
 			<Content className='log-in'>
 				<Spin size='large' tip='Logging you in...' />
@@ -60,12 +56,12 @@ export const Login: FC<IProps> = ({ setViewer }) => {
 		)
 	}
 
-	if (logInData && logInData.logIn) {
-		const { id: viewerId } = logInData.logIn
+	if (logInRes.data && logInRes.data.logIn) {
+		const { id: viewerId } = logInRes.data.logIn
 		return <Redirect to={`/user/${viewerId}`} />
 	}
 
-	const logInErrorBannerElement = logInError && (
+	const logInErrorBannerElement = logInRes.error && (
 		<ErrorBanner message="Sorry! We weren't able to log you in." />
 	)
 
@@ -86,7 +82,6 @@ export const Login: FC<IProps> = ({ setViewer }) => {
 				</div>
 				<button
 					onClick={() => {
-						console.log('clicked')
 						authorize()
 					}}
 					className='log-in-card__google-button'
@@ -103,38 +98,9 @@ export const Login: FC<IProps> = ({ setViewer }) => {
 				</button>
 				<Text type='secondary'>
 					Note: By signing in, you'll be redirected to the Google consent form
-					to sign in with your Google accoutn
+					to sign in with your Google account
 				</Text>
 			</Card>
 		</Content>
 	)
 }
-
-// ----------------------- MY_IMPLEMENTATION -----------------------
-
-// let query = useQuery()
-// const tryToLogIn = useCallback(():
-// 	| Promise<FetchResult<LogIn, Record<string, any>, Record<string, any>>>
-// 	| undefined => {
-// 	const code = query.get('code')
-
-// 	if (code) {
-// 		return client.mutate<LogIn, LogInVariables>({
-// 			mutation: LOG_IN,
-// 			variables: { input: { code } },
-// 		})
-// 	}
-// }, [client, query])
-
-// useEffect(() => {
-// 	;(async () => {
-// 		const viewer = await tryToLogIn()
-// 		console.log({ viewer })
-
-// 		if (viewer) {
-// 			history.push('/')
-// 		}
-// 	})()
-
-// }, [tryToLogIn, history])
-// ----------------------- MY_IMPLEMENTATION_END -----------------------

@@ -2,7 +2,6 @@ import { Button, Card, DatePicker, Divider, Typography } from 'antd';
 import moment, { Moment } from 'moment';
 import React, { FC } from 'react';
 import { displayErrorMessage, formatListingPrice } from 'utils';
-import { Maybe } from '__generated__/graphql';
 
 const { Title, Paragraph } = Typography
 
@@ -23,7 +22,6 @@ export const ListingCreateBookings: FC<IProps> = ({
 	setCheckInDate,
 	setCheckOutDate,
 }) => {
-
 	const disabledDate = (date: Moment) => date.isBefore(moment().endOf('day'))
 
 	const verifyAndSetCheckOutDate = (selectedCheckOutDate: Maybe<Moment>) => {
