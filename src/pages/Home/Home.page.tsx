@@ -1,11 +1,13 @@
+import { useQuery } from '@apollo/client';
 import { Col, Layout, Row, Typography } from 'antd';
 import cancunImage from 'assets/images/cancun.jpg';
 import mapBackgroundImage from 'assets/images/map-background.jpg';
 import sanFransiscoImage from 'assets/images/san-fransisco.jpg';
+import { LISTINGS } from 'graphql/queries';
 import React, { FC } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { displayErrorMessage } from 'utils';
-import { HomeHero } from './components';
+import { displayErrorMessage, listingsFilter } from 'utils';
+import { HomeHero, HomeListings, HomeListingsSkeleton } from './components';
 
 const { Paragraph, Title } = Typography
 const { Content } = Layout
@@ -13,12 +15,40 @@ const { Content } = Layout
 interface IProps extends RouteComponentProps {}
 
 export const Home: FC<IProps> = ({ history }) => {
+	const { data, loading } = useQuery<IListingsQuery, IListingsQueryVariables>(
+		LISTINGS,
+		{
+			variables: {
+				filter: listingsFilter.PRICE_HIGH_TO_LOW,
+				limit: 4,
+				listingsPage: 1,
+			},
+		}
+	)
+
 	const onSearch = (query: string) => {
 		if (query.trim()) {
 			history.push(`/listings/${query.trim()}`)
 		} else {
 			displayErrorMessage('Please enter a valid search!')
 		}
+	}
+
+	const renderListingsSection = () => {
+		if (loading) {
+			return <HomeListingsSkeleton />
+		}
+
+		if (data) {
+			return (
+				<HomeListings
+					title='Premium Listings'
+					listings={data.listings.result}
+				/>
+			)
+		}
+
+		return null
 	}
 
 	return (
@@ -43,6 +73,8 @@ export const Home: FC<IProps> = ({ history }) => {
 					Popular listings in the United States
 				</Link>
 			</div>
+
+			{renderListingsSection()}
 
 			<div className='home__listings'>
 				<Title level={4} className='home__listings-title'>

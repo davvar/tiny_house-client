@@ -7,22 +7,17 @@ import { formatListingPrice, iconColor } from 'utils';
 const { Text, Title } = Typography
 
 interface IProps {
-	listing: {
-		id: string
-		title: string
-		image: string
-		address: string
-		price: number
-		numOfGuests: number
-	}
+	listing: IListingsQuery['listings']['result'][0]
 }
 
 export const ListingCard: FC<IProps> = ({ listing }) => {
 	const { address, image, numOfGuests, price, title, id } = listing
+
 	return (
 		<Link to={`/listing/${id}`}>
 			<Card
 				hoverable
+				className='listing-card'
 				cover={
 					<div
 						style={{ background: `url(${image})` }}
@@ -42,7 +37,7 @@ export const ListingCard: FC<IProps> = ({ listing }) => {
 							{address}
 						</Text>
 					</div>
-					<div className='listing-card__dimensions listing-card__dimensions-guests'>
+					<div className='listing-card__dimensions listing-card__dimensions--guests'>
 						<UserOutlined style={{ color: iconColor, marginRight: 5 }} />
 						<Text>{numOfGuests} guests</Text>
 					</div>

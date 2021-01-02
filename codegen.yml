@@ -10,6 +10,8 @@ generates:
     config:
       typesPrefix: I
       skipTypename: true
+      noExport: true
+      enumsAsTypes: true
   ./graphql.schema.json:
     plugins:
       - "introspection"
