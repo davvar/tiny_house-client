@@ -43,6 +43,8 @@ type IListing = {
   host: IUser;
   type: IListingType;
   address: Scalars['String'];
+  country: Scalars['String'];
+  admin: Scalars['String'];
   city: Scalars['String'];
   bookings?: Maybe<IBookings>;
   bookingsIndex: Scalars['String'];
@@ -57,6 +59,7 @@ type IListingBookingsArgs = {
 };
 
 type IListings = {
+  region?: Maybe<Scalars['String']>;
   total: Scalars['Int'];
   result: Array<IListing>;
 };
@@ -115,6 +118,7 @@ type IQueryListingArgs = {
 
 
 type IQueryListingsArgs = {
+  location?: Maybe<Scalars['String']>;
   filter: IListingsFilter;
   page: Scalars['Int'];
   limit: Scalars['Int'];
@@ -166,13 +170,17 @@ type IListingQuery = { listing: (
   ) };
 
 type IListingsQueryVariables = Exact<{
+  location?: Maybe<Scalars['String']>;
   filter: IListingsFilter;
   listingsPage: Scalars['Int'];
   limit: Scalars['Int'];
 }>;
 
 
-type IListingsQuery = { listings: { result: Array<Pick<IListing, 'id' | 'title' | 'image' | 'address' | 'price' | 'numOfGuests'>> } };
+type IListingsQuery = { listings: (
+    Pick<IListings, 'total' | 'region'>
+    & { result: Array<Pick<IListing, 'id' | 'title' | 'image' | 'address' | 'price' | 'numOfGuests'>> }
+  ) };
 
 type IUserQueryVariables = Exact<{
   id: Scalars['ID'];

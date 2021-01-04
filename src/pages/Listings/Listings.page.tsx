@@ -1,108 +1,97 @@
-// import { useMutation, useQuery } from '@apollo/client'
-import React, { FC } from 'react';
-// import { Listings as ListingsData } from './__generated__/Listings'
-// import {
-// 	DeleteListing as DeleteListingData,
-// 	DeleteListingVariables,
-// } from './__generated__/DeleteListing'
-import 'styles/Listings.css';
+import { useQuery } from '@apollo/client';
+import { Layout, List, Skeleton, Typography } from 'antd';
+import { ErrorBanner, ListingCard } from 'Components';
+import { LISTINGS } from 'graphql/queries';
+import { get } from 'lodash';
+import React, { FC, useState } from 'react';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { listingsFilter } from 'utils';
+import { ListingsSkeleton } from '.';
 
-// const LISTINGS = gql`
-// 	query Listings {
-// 		listings {
-// 			id
-// 			title
-// 			image
-// 			address
-// 			price
-// 			numOfGuests
-// 			numOfBeds
-// 			numOfBaths
-// 			rating
-// 		}
-// 	}
-// `
+const { Title, Paragraph, Text } = Typography
 
-// const DELETE_LISTINGS = gql`
-// 	mutation DeleteListing($id: ID!) {
-// 		deleteListing(id: $id) {
-// 			id
-// 		}
-// 	}
-// `
-
-interface IProps {
-	title: string
+interface IMatchParams {
+	location: string
 }
 
-export const Listings: FC<IProps> = ({ title }) => {
-	// const { data, loading, error, refetch } = useQuery<ListingsData>(LISTINGS)
-	// const [
-	// 	deleteListing,
-	// 	{ loading: deleteListingLoading, error: deleteListingError },
-	// ] = useMutation<DeleteListingData, DeleteListingVariables>(DELETE_LISTINGS)
+interface IProps extends RouteComponentProps<IMatchParams> {}
 
-	// const onDeleteListing = (id: string) => async () => {
-	// 	await deleteListing({ variables: { id } })
-	// 	refetch()
-	// }
+const { Content } = Layout
+const PAGE_LIMIT = 8
 
-	// const listings = data ? data.listings : null
-	// const listingsList = listings && (
-	// 	<List
-	// 		itemLayout='horizontal'
-	// 		dataSource={listings}
-	// 		renderItem={({ title, address, image, id }) => (
-	// 			<List.Item
-	// 				actions={[
-	// 					<Button type='primary' onClick={onDeleteListing(id)}>
-	// 						Delete
-	// 					</Button>,
-	// 				]}
-	// 			>
-	// 				<List.Item.Meta
-	// 					title={title}
-	// 					description={address}
-	// 					avatar={<Avatar src={image} shape='square' size={48} />}
-	// 				/>
-	// 			</List.Item>
-	// 		)}
-	// 	/>
-	// )
+export const Listings: FC<IProps> = ({ match }) => {
+	const [listingsPage, setListingsPage] = useState(1)
+	const { data, loading, error } = useQuery<
+		IListingsQuery,
+		IListingsQueryVariables
+	>(LISTINGS, {
+		variables: {
+			location: match.params.location,
+			filter: listingsFilter.PRICE_HIGH_TO_LOW,
+			limit: PAGE_LIMIT,
+			listingsPage,
+		},
+	})
 
-	// if (error) {
-	// 	return (
-	// 		<div className='listings'>
-	// 			<ListingsSkeleton error title={title} />
-	// 		</div>
-	// 	)
-	// }
+	if (error) {
+		return (
+			<>
+				<ErrorBanner description="We either couldn't find anything matching your search or have encountered an error. If you're searching for a unique location, try searching again with more common keywords." />
+				<Content className='listings'>
+					<ListingsSkeleton cardsCount={PAGE_LIMIT}>
+						<Skeleton paragraph={{ rows: 1 }} active />
+					</ListingsSkeleton>
+				</Content>
+			</>
+		)
+	}
 
-	// if (loading) {
-	// 	return (
-	// 		<div className='listings'>
-	// 			<ListingsSkeleton title={title} />
-	// 		</div>
-	// 	)
-	// }
+	if (loading) {
+		return (
+			<Content className='listings'>
+				<ListingsSkeleton cardsCount={PAGE_LIMIT}>
+					<Skeleton paragraph={{ rows: 1 }} active />
+				</ListingsSkeleton>
+			</Content>
+		)
+	}
 
-	// const deleteListingErrorAlert = deleteListingError && (
-	// 	<Alert
-	// 		type='error'
-	// 		message='Something went wrong - please try again later'
-	// 		className='listings_alert'
-	// 	/>
-	// )
+	const listings = get(data, 'listings', null)
+
+	const listingsRegionElement = listings?.region && (
+		<Title level={3} className='listings__title'>
+			Results for {listings?.region}
+		</Title>
+	)
+
+	const listingsSectionElement =
+		listings && listings.result.length ? (
+			<List
+				grid={{ column: 4, gutter: 8, xs: 1, sm: 2, lg: 4 }}
+				dataSource={listings.result}
+				renderItem={listing => (
+					<List.Item>
+						<ListingCard listing={listing} />
+					</List.Item>
+				)}
+			/>
+		) : (
+			<div>
+				<Paragraph>
+					It appears that no listings have ye been created for this
+					<Text mark>"{listings?.region}"</Text>
+				</Paragraph>
+				<Paragraph>
+					Be the first person to create a{' '}
+					<Link to='/host'>listing in this area</Link>!
+				</Paragraph>
+			</div>
+		)
 
 	return (
-		<div className='listings'>
-			{/* <Spin spinning={deleteListingLoading}>
-				{deleteListingErrorAlert}
-				<h2>{title}</h2>
-				{listingsList}
-			</Spin> */}
-		</div>
+		<Content className='listings'>
+			{listingsRegionElement}
+			{listingsSectionElement}
+		</Content>
 	)
 }
-
-export default Listings

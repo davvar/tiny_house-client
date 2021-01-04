@@ -1,20 +1,34 @@
-import { Alert, Divider, Skeleton } from 'antd';
+import { Card, List } from 'antd';
+import listingLoadingCover from 'assets/images/listing-loading-card-cover.jpg';
 import React, { FC } from 'react';
-import 'styles/ListingsSkeleton.css';
 
 interface IProps {
-	title: string
-	error?: boolean
+	cardsCount?: number
 }
 
-export const ListingsSkeleton: FC<IProps> = ({ title, error = false }) => (
-	<>
-		<h2>{title}</h2>
-		{error && <Alert className='listing-skeleton-alert' type='error' message='Something went wrong...' />}
-		<Skeleton active paragraph={{ rows: 1 }} />
-		<Divider />
-		<Skeleton active paragraph={{ rows: 1 }} />
-		<Divider />
-		<Skeleton active paragraph={{ rows: 1 }} />
-	</>
-)
+export const ListingsSkeleton: FC<IProps> = ({ children, cardsCount = 4 }) => {
+	const emptyData = Array(cardsCount).fill({})
+
+	return (
+		<div className='home-listings-skeleton'>
+			{children}
+			<List
+				grid={{ gutter: 8, xs: 1, sm: 2, lg: 4, column: 4 }}
+				dataSource={emptyData}
+				renderItem={() => (
+					<List.Item>
+						<Card
+							loading
+							cover={
+								<div
+									style={{ background: `url(${listingLoadingCover})` }}
+									className='home-listings-skeleton__card-cover-img'
+								></div>
+							}
+						/>
+					</List.Item>
+				)}
+			/>
+		</div>
+	)
+}
