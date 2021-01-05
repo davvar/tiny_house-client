@@ -1,9 +1,9 @@
 import Search from 'antd/lib/input/Search';
 import { Header } from 'antd/lib/layout/layout';
 import logo from 'assets/images/tinyhouse-logo.png';
-import { get } from 'lodash';
+import { last } from 'lodash';
 import React, { FC, useEffect, useState } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { MenuItems } from './components';
 
 interface IProps {
@@ -13,14 +13,15 @@ interface IProps {
 }
 
 export const AppHeader: FC<IProps> = ({ onSearch, ...props }) => {
-	const match = useRouteMatch('/listings/:searchQuery')
-
+	const location = useLocation()
 	const [searchQuery, setSearchQuery] = useState('')
 
 	useEffect(() => {
-		const newSearchQuery = get(match, 'params.searchQuery', '')
-		setSearchQuery(newSearchQuery)
-	}, [match])
+		if (location.pathname.includes('/listings')) {
+			const query = last(location.pathname.split('/')) as string
+			setSearchQuery(query)
+		} else setSearchQuery('')
+	}, [location])
 
 	return (
 		<Header className='app-header'>
@@ -33,9 +34,7 @@ export const AppHeader: FC<IProps> = ({ onSearch, ...props }) => {
 				<div className='app-header__search-input'>
 					<Search
 						value={searchQuery}
-						onChange={({ target }) => {
-							setSearchQuery(target.value)
-						}}
+						onChange={e => setSearchQuery(e.target.value)}
 						onSearch={onSearch}
 						enterButton
 						placeholder="Search 'Yerevan'"
