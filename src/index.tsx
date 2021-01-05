@@ -1,20 +1,20 @@
 import {
 	ApolloClient,
-	ApolloProvider,
-	InMemoryCache,
 	ApolloLink,
+	ApolloProvider,
+	concat,
 	HttpLink,
-	concat
-} from '@apollo/client'
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { App } from './App'
+	InMemoryCache
+} from '@apollo/client';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { App } from './App';
+import reportWebVitals from './reportWebVitals';
+import './styles/index.css';
 
-import reportWebVitals from './reportWebVitals'
-import './styles/index.css'
 
-
-const httpLink = new HttpLink({ uri: '/api' });
+const httpLink = new HttpLink({ uri: '/api' })
 const authMiddleware = new ApolloLink((operation, forward) => {
 	const token = window.sessionStorage.getItem('token')
 	operation.setContext({
@@ -33,7 +33,9 @@ const client = new ApolloClient({
 
 ReactDOM.render(
 	<ApolloProvider client={client}>
-		<App />
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
 	</ApolloProvider>,
 	document.getElementById('root')
 )

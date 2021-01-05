@@ -5,16 +5,18 @@ import mapBackgroundImage from 'assets/images/map-background.jpg';
 import sanFransiscoImage from 'assets/images/san-fransisco.jpg';
 import { LISTINGS } from 'graphql/queries';
 import React, { FC } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { displayErrorMessage, listingsFilter } from 'utils';
+import { Link } from 'react-router-dom';
+import { listingsFilter } from 'utils';
 import { HomeHero, HomeListings, HomeListingsSkeleton } from './components';
 
 const { Paragraph, Title } = Typography
 const { Content } = Layout
 
-interface IProps extends RouteComponentProps {}
+interface IProps {
+	onSearch: (query: string) => void
+}
 
-export const Home: FC<IProps> = ({ history }) => {
+export const Home: FC<IProps> = ({ onSearch }) => {
 	const { data, loading } = useQuery<IListingsQuery, IListingsQueryVariables>(
 		LISTINGS,
 		{
@@ -25,14 +27,6 @@ export const Home: FC<IProps> = ({ history }) => {
 			},
 		}
 	)
-
-	const onSearch = (query: string) => {
-		if (query.trim()) {
-			history.push(`/listings/${query.trim()}`)
-		} else {
-			displayErrorMessage('Please enter a valid search!')
-		}
-	}
 
 	const renderListingsSection = () => {
 		if (loading) {

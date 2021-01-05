@@ -7,7 +7,7 @@ interface IProps {
 }
 
 export const ErrorBanner: FC<IProps> = ({
-	message = 'Something went wrong.',
+	message = 'Uh oh! Something went wrong :(',
 	description = 'Some Description',
 }) => (
 	<Alert

@@ -24,7 +24,10 @@ export const formatListingPrice = (price: number, round = true) => {
 
 export const iconColor = '#1890ff'
 
-export const listingsFilter: { [key: string]: IListingsFilter } = {
+export const listingsFilter: {
+	PRICE_HIGH_TO_LOW: IListingsFilter
+	PRICE_LOW_TO_HIGH: IListingsFilter
+} = {
 	PRICE_HIGH_TO_LOW: 'PRICE_HIGH_TO_LOW',
 	PRICE_LOW_TO_HIGH: 'PRICE_LOW_TO_HIGH',
 }
