@@ -15,6 +15,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react'
 import { Route, Switch, useHistory } from 'react-router-dom'
 import { displayErrorMessage } from 'utils'
+import { ViewerProvider } from 'ViewerContext'
 
 const initialViewer: IViewer = {
 	id: null,
@@ -27,7 +28,7 @@ const initialViewer: IViewer = {
 export const App = () => {
 	const history = useHistory()
 	const [viewer, setViewer] = useState<IViewer>(initialViewer)
-	const [searchQuery, setSearchQuery] = useState<string>('')
+	const [, setSearchQuery] = useState<string>('')
 
 	const [logIn, { error }] = useMutation<
 		ILogInMutation,
@@ -75,36 +76,23 @@ export const App = () => {
 	)
 
 	return (
-		<Layout id='app'>
-			{logInErrorBannerElement}
-			<Affix offsetTop={0} className='app__affix-header'>
-				<AppHeader viewer={viewer} setViewer={setViewer} onSearch={onSearch} />
-			</Affix>
-			<Switch>
-				<Route exact path='/' render={() => <Home onSearch={onSearch} />} />
-				<Route path='/host' component={Host} />
-				<Route path='/listing/:id' component={Listing} />
-				<Route path='/listings/:location?' component={Listings} />
-				<Route
-					exact
-					path='/login'
-					render={props => <Login {...props} setViewer={setViewer} />}
-				/>
-				<Route
-					exact
-					path='/stripe'
-					render={props => (
-						<Stripe {...props} viewer={viewer} setViewer={setViewer} />
-					)}
-				/>
-				<Route
-					path='/user/:id'
-					render={props => (
-						<User {...props} setViewer={setViewer} viewer={viewer} />
-					)}
-				/>
-				<Route component={NotFound} />
-			</Switch>
-		</Layout>
+		<ViewerProvider value={{ viewer, setViewer }}>
+			<Layout id='app'>
+				{logInErrorBannerElement}
+				<Affix offsetTop={0} className='app__affix-header'>
+					<AppHeader onSearch={onSearch} />
+				</Affix>
+				<Switch>
+					<Route exact path='/' render={() => <Home onSearch={onSearch} />} />
+					<Route path='/host' component={Host} />
+					<Route path='/listing/:id' component={Listing} />
+					<Route path='/listings/:location?' component={Listings} />
+					<Route exact path='/login' component={Login} />
+					<Route exact path='/stripe' component={Stripe} />
+					<Route path='/user/:id' component={User} />
+					<Route component={NotFound} />
+				</Switch>
+			</Layout>
+		</ViewerProvider>
 	)
 }

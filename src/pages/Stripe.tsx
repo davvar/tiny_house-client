@@ -1,19 +1,17 @@
 import { useMutation } from '@apollo/client'
 import { Spin, Layout } from 'antd'
 import { CONNECT_STRIPE } from 'graphql/mutations'
-import React, { useEffect, useRef } from 'react'
-import { FC } from 'react'
+import React, { useEffect, useRef, FC } from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
-import { displaySuccessNotification } from 'utils';
+import { displaySuccessNotification } from 'utils'
+import { useViewer } from 'ViewerContext'
 
 const { Content } = Layout
 
-interface IProps extends RouteComponentProps{
-	viewer: IViewer
-	setViewer: React.Dispatch<React.SetStateAction<IViewer>>
-}
+interface IProps extends RouteComponentProps {}
 
-export const Stripe: FC<IProps> = ({ viewer, setViewer, history }) => {
+export const Stripe: FC<IProps> = ({ history }) => {
+	const { viewer, setViewer } = useViewer()
 	const [connectStripe, { data, error, loading }] = useMutation<
 		IConnectStripeMutation,
 		IConnectStripeMutationVariables
@@ -30,7 +28,7 @@ export const Stripe: FC<IProps> = ({ viewer, setViewer, history }) => {
 					'You can now begin to create listings in the Host page'
 				)
 			}
-		}
+		},
 	})
 
 	const connectStripeRef = useRef(connectStripe)
@@ -42,7 +40,6 @@ export const Stripe: FC<IProps> = ({ viewer, setViewer, history }) => {
 		} else {
 			history.replace('/login')
 		}
-
 	}, [history])
 
 	if (data && data.connectStripe) {

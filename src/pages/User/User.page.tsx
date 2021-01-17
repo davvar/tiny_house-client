@@ -1,25 +1,24 @@
 import { useQuery } from '@apollo/client'
-import { Col, Row } from 'antd'
-import { Content } from 'antd/lib/layout/layout'
+import { Col, Row, Layout } from 'antd'
 import { ErrorBanner, PageSkeleton } from 'Components'
 import { USER } from 'graphql/queries'
 import { get } from 'lodash'
 import React, { FC, useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
+import { useViewer } from 'ViewerContext'
 import { UserBookings, UserListings, UserProfile } from './components'
 
+const { Content } = Layout
 const PAGE_LIMIT = 4
 
 interface IMatchParams {
 	id: string
 }
 
-interface IProps extends RouteComponentProps<IMatchParams> {
-	viewer: IViewer
-	setViewer: React.Dispatch<React.SetStateAction<IViewer>>
-}
+interface IProps extends RouteComponentProps<IMatchParams> {}
 
-export const User: FC<IProps> = ({ viewer, match, setViewer }) => {
+export const User: FC<IProps> = ({ match }) => {
+	const { viewer, setViewer } = useViewer()
 	const [listingsPage, setListingsPage] = useState(1)
 	const [bookingsPage, setBookingsPage] = useState(1)
 

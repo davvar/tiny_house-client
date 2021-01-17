@@ -7,12 +7,10 @@ import { Link, useLocation } from 'react-router-dom';
 import { MenuItems } from './components';
 
 interface IProps {
-	viewer: IViewer
-	setViewer: (viewer: IViewer) => void
 	onSearch: (query: string) => void
 }
 
-export const AppHeader: FC<IProps> = ({ onSearch, ...props }) => {
+export const AppHeader: FC<IProps> = ({ onSearch }) => {
 	const location = useLocation()
 	const [searchQuery, setSearchQuery] = useState('')
 
@@ -42,7 +40,7 @@ export const AppHeader: FC<IProps> = ({ onSearch, ...props }) => {
 				</div>
 			</div>
 			<div className='app-header__menu-section'>
-				<MenuItems {...props} />
+				<MenuItems />
 			</div>
 		</Header>
 	)
