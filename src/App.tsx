@@ -1,11 +1,20 @@
-import { useMutation } from '@apollo/client';
-import { Affix, Layout, Spin } from 'antd';
-import { AppHeader, AppHeaderSkeleton, ErrorBanner } from 'Components';
-import { LOG_IN } from 'graphql/mutations';
-import { Home, Host, Listing, Listings, Login, NotFound, User } from 'pages';
-import React, { useEffect, useRef, useState } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
-import { displayErrorMessage } from 'utils';
+import { useMutation } from '@apollo/client'
+import { Affix, Layout, Spin } from 'antd'
+import { AppHeader, AppHeaderSkeleton, ErrorBanner } from 'Components'
+import { LOG_IN } from 'graphql/mutations'
+import {
+	Home,
+	Host,
+	Listing,
+	Listings,
+	Login,
+	NotFound,
+	Stripe,
+	User,
+} from 'pages'
+import React, { useEffect, useRef, useState } from 'react'
+import { Route, Switch, useHistory } from 'react-router-dom'
+import { displayErrorMessage } from 'utils'
 
 const initialViewer: IViewer = {
 	id: null,
@@ -69,11 +78,7 @@ export const App = () => {
 		<Layout id='app'>
 			{logInErrorBannerElement}
 			<Affix offsetTop={0} className='app__affix-header'>
-				<AppHeader
-					viewer={viewer}
-					setViewer={setViewer}
-					onSearch={onSearch}
-				/>
+				<AppHeader viewer={viewer} setViewer={setViewer} onSearch={onSearch} />
 			</Affix>
 			<Switch>
 				<Route exact path='/' render={() => <Home onSearch={onSearch} />} />
@@ -86,8 +91,17 @@ export const App = () => {
 					render={props => <Login {...props} setViewer={setViewer} />}
 				/>
 				<Route
+					exact
+					path='/stripe'
+					render={props => (
+						<Stripe {...props} viewer={viewer} setViewer={setViewer} />
+					)}
+				/>
+				<Route
 					path='/user/:id'
-					render={props => <User {...props} viewer={viewer} />}
+					render={props => (
+						<User {...props} setViewer={setViewer} viewer={viewer} />
+					)}
 				/>
 				<Route component={NotFound} />
 			</Switch>

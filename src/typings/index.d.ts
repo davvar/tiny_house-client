@@ -124,9 +124,15 @@ type IQueryListingsArgs = {
   limit: Scalars['Int'];
 };
 
+type IConnectStripeInput = {
+  code: Scalars['String'];
+};
+
 type IMutation = {
   logIn: IViewer;
   logOut: IViewer;
+  connectStripe: IViewer;
+  disconnectStripe: IViewer;
 };
 
 
@@ -134,10 +140,27 @@ type IMutationLogInArgs = {
   input?: Maybe<ILogInInput>;
 };
 
+
+type IMutationConnectStripeArgs = {
+  input: IConnectStripeInput;
+};
+
 type ICacheControlScope = 
   | 'PUBLIC'
   | 'PRIVATE';
 
+
+type IConnectStripeMutationVariables = Exact<{
+  input: IConnectStripeInput;
+}>;
+
+
+type IConnectStripeMutation = { connectStripe: Pick<IViewer, 'hasWallet'> };
+
+type IDisconnectStripeMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+type IDisconnectStripeMutation = { disconnectStripe: Pick<IViewer, 'hasWallet'> };
 
 type ILogInMutationVariables = Exact<{
   input?: Maybe<ILogInInput>;

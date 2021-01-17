@@ -1,12 +1,12 @@
-import { useQuery } from '@apollo/client';
-import { Col, Row } from 'antd';
-import { Content } from 'antd/lib/layout/layout';
-import { ErrorBanner, PageSkeleton } from 'Components';
-import { USER } from 'graphql/queries';
-import { get } from 'lodash';
-import React, { FC, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { UserBookings, UserListings, UserProfile } from './components';
+import { useQuery } from '@apollo/client'
+import { Col, Row } from 'antd'
+import { Content } from 'antd/lib/layout/layout'
+import { ErrorBanner, PageSkeleton } from 'Components'
+import { USER } from 'graphql/queries'
+import { get } from 'lodash'
+import React, { FC, useState } from 'react'
+import { RouteComponentProps } from 'react-router-dom'
+import { UserBookings, UserListings, UserProfile } from './components'
 
 const PAGE_LIMIT = 4
 
@@ -16,13 +16,14 @@ interface IMatchParams {
 
 interface IProps extends RouteComponentProps<IMatchParams> {
 	viewer: IViewer
+	setViewer: React.Dispatch<React.SetStateAction<IViewer>>
 }
 
-export const User: FC<IProps> = ({ viewer, match }) => {
+export const User: FC<IProps> = ({ viewer, match, setViewer }) => {
 	const [listingsPage, setListingsPage] = useState(1)
 	const [bookingsPage, setBookingsPage] = useState(1)
 
-	const { data, loading, error } = useQuery<IQueryUserArgs>(USER, {
+	const { data, loading, error, refetch } = useQuery<IQueryUserArgs>(USER, {
 		variables: {
 			id: match.params.id,
 			bookingsPage,
@@ -30,6 +31,17 @@ export const User: FC<IProps> = ({ viewer, match }) => {
 			limit: PAGE_LIMIT,
 		},
 	})
+
+	const handleUserRefetch = async () => {
+		await refetch()
+	}
+
+	const stripeError = new URL(window.location.href).searchParams.get(
+		'stripe_error'
+	)
+	const stripeErrorBanner = stripeError && (
+		<ErrorBanner description='We had an issue connecting with Stripe. Please try again soon.' />
+	)
 
 	if (loading) {
 		return (
@@ -73,11 +85,17 @@ export const User: FC<IProps> = ({ viewer, match }) => {
 	)
 
 	const userProfileElement = user ? (
-		<UserProfile viewerIsUser={viewerIsUser} user={user as IUser} />
+		<UserProfile
+			viewerIsUser={viewerIsUser}
+			setViewer={setViewer}
+			handleUserRefetch={handleUserRefetch}
+			user={user as IUser}
+		/>
 	) : null
 
 	return (
 		<Content className='user'>
+			{stripeErrorBanner}
 			<Row gutter={12} justify='space-between'>
 				<Col xs={24}>{userProfileElement}</Col>
 				<Col xs={24}>
