@@ -1,4 +1,5 @@
 export * from './Home/Home.page';
+export * from './Stripe';
 export * from './Host.page';
 export * from './Listing/Listing.page';
 export * from './Listings';
