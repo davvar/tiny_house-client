@@ -1,19 +1,17 @@
-import { HomeOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { useMutation } from '@apollo/client';
-import { Avatar, Button, Menu } from 'antd';
-import { LOG_OUT } from 'graphql/mutations';
-import React, { FC } from 'react';
-import { Link } from 'react-router-dom';
-import { displayErrorMessage, displaySuccessNotification } from '../../../utils';
-
-interface IProps {
-	viewer: IViewer
-	setViewer: (viewer: IViewer) => void
-}
+import { HomeOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons'
+import { useMutation } from '@apollo/client'
+import { Avatar, Button, Menu } from 'antd'
+import { LOG_OUT } from 'graphql/mutations'
+import React, { FC } from 'react'
+import { Link } from 'react-router-dom'
+import { useViewer } from 'ViewerContext';
+import { displayErrorMessage, displaySuccessNotification } from '../../../utils'
 
 const { Item, SubMenu } = Menu
 
-export const MenuItems: FC<IProps> = ({ viewer, setViewer }) => {
+export const MenuItems: FC = () => {
+	const { setViewer, viewer } = useViewer()
+
 	const [logOut] = useMutation<ILogOutMutation, ILogOutMutationVariables>(
 		LOG_OUT,
 		{

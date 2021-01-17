@@ -1,21 +1,19 @@
-import { useLazyQuery, useMutation } from '@apollo/client';
-import { Card, Layout, Spin, Typography } from 'antd';
-import googleLogo from 'assets/images/google_logo.jpg';
-import { ErrorBanner } from 'Components';
-import { LOG_IN } from 'graphql/mutations';
-import { USER_AUTH } from 'graphql/queries';
-import React, { FC, useEffect, useRef } from 'react';
-import { Redirect, RouteComponentProps } from 'react-router-dom';
-import { displayErrorMessage, displaySuccessNotification } from 'utils';
-
-interface IProps extends RouteComponentProps {
-	setViewer: (viewer: IViewer) => void
-}
+import { useLazyQuery, useMutation } from '@apollo/client'
+import { Card, Layout, Spin, Typography } from 'antd'
+import googleLogo from 'assets/images/google_logo.jpg'
+import { ErrorBanner } from 'Components'
+import { LOG_IN } from 'graphql/mutations'
+import { USER_AUTH } from 'graphql/queries'
+import React, { FC, useEffect, useRef } from 'react'
+import { Redirect } from 'react-router-dom'
+import { displayErrorMessage, displaySuccessNotification } from 'utils'
+import { useViewer } from 'ViewerContext'
 
 const { Content } = Layout
 const { Text, Title } = Typography
 
-export const Login: FC<IProps> = ({ setViewer }) => {
+export const Login: FC = () => {
+	const { setViewer } = useViewer()
 	const [authorize, authQuery] = useLazyQuery<IAuthUrlQuery>(USER_AUTH)
 
 	const [logIn, logInRes] = useMutation<
