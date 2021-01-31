@@ -1,4 +1,4 @@
-import React, { createContext, useContext, FC } from 'react'
+import React, { createContext, FC, useContext } from 'react'
 
 interface IContext {
 	viewer: IViewer

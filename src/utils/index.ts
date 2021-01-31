@@ -1,4 +1,4 @@
-import { message, notification } from 'antd';
+import { message, notification } from 'antd'
 
 export const displaySuccessNotification = (
 	message: string,
@@ -30,4 +30,11 @@ export const listingsFilter: {
 } = {
 	PRICE_HIGH_TO_LOW: 'PRICE_HIGH_TO_LOW',
 	PRICE_LOW_TO_HIGH: 'PRICE_LOW_TO_HIGH',
+}
+export const listingType: {
+	Apartment: IListingType
+	House: IListingType
+} = {
+	House: 'HOUSE',
+	Apartment: 'APARTMENT',
 }

@@ -128,11 +128,22 @@ type IConnectStripeInput = {
   code: Scalars['String'];
 };
 
+type IHostListingInput = {
+  title: Scalars['String'];
+  description: Scalars['String'];
+  image: Scalars['String'];
+  address: Scalars['String'];
+  type: IListingType;
+  price: Scalars['Int'];
+  numOfGuests: Scalars['Int'];
+};
+
 type IMutation = {
   logIn: IViewer;
   logOut: IViewer;
   connectStripe: IViewer;
   disconnectStripe: IViewer;
+  hostListing: IListing;
 };
 
 
@@ -143,6 +154,11 @@ type IMutationLogInArgs = {
 
 type IMutationConnectStripeArgs = {
   input: IConnectStripeInput;
+};
+
+
+type IMutationHostListingArgs = {
+  input: IHostListingInput;
 };
 
 type ICacheControlScope = 
@@ -161,6 +177,13 @@ type IDisconnectStripeMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 type IDisconnectStripeMutation = { disconnectStripe: Pick<IViewer, 'hasWallet'> };
+
+type IHostListingMutationVariables = Exact<{
+  input: IHostListingInput;
+}>;
+
+
+type IHostListingMutation = { hostListing: Pick<IListing, 'id'> };
 
 type ILogInMutationVariables = Exact<{
   input?: Maybe<ILogInInput>;
