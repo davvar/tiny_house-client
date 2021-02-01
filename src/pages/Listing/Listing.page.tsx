@@ -8,9 +8,10 @@ import React, { FC, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import {
 	ListingBookings,
+	ListingCreateBookingModal,
 	ListingCreateBookings,
-	ListingDetails
-} from './components';
+	ListingDetails,
+} from './components'
 
 const { Content } = Layout
 
@@ -24,10 +25,14 @@ const PAGE_LIMIT = 3
 
 export const Listing: FC<IProps> = ({ match }) => {
 	const [bookingsPage, setBookingsPage] = useState(1)
+	const [modalVisible, setModalVisible] = useState(false)
 	const [checkInDate, setCheckInDate] = useState<Moment | null>(null)
 	const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null)
 
-	const { data, loading, error } = useQuery<IListingQuery ,IListingQueryVariables>(LISTING, {
+	const { data, loading, error } = useQuery<
+		IListingQuery,
+		IListingQueryVariables
+	>(LISTING, {
 		variables: {
 			bookingsPage,
 			id: match.params.id,
@@ -54,9 +59,17 @@ export const Listing: FC<IProps> = ({ match }) => {
 
 	const listing = get(data, 'listing', null)
 	const listingBookings = get(listing, 'bookings', null)
-
 	return (
 		<Content className='listing'>
+			{listing && checkInDate && checkOutDate && (
+				<ListingCreateBookingModal
+					price={listing.price}
+					checkInDate={checkInDate}
+					checkOutDate={checkOutDate}
+					visible={modalVisible}
+					setVisible={setModalVisible}
+				/>
+			)}
 			<Row gutter={24} justify='space-between'>
 				<Col xs={24} lg={14}>
 					{listing && <ListingDetails listing={listing as IListing} />}
@@ -72,10 +85,13 @@ export const Listing: FC<IProps> = ({ match }) => {
 				{listing && (
 					<Col xs={24} lg={10}>
 						<ListingCreateBookings
+							host={listing.host as IUser}
+							bookingsIndex={listing.bookingsIndex}
 							checkInDate={checkInDate}
 							checkOutDate={checkOutDate}
 							setCheckInDate={setCheckInDate}
 							setCheckOutDate={setCheckOutDate}
+							setModalVisible={setModalVisible}
 							price={listing.price}
 						/>
 					</Col>
