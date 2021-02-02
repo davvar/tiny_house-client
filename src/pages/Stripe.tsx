@@ -34,7 +34,7 @@ export const Stripe: FC<IProps> = ({ history }) => {
 	const connectStripeRef = useRef(connectStripe)
 	useEffect(() => {
 		const code = new URL(window.location.href).searchParams.get('code')
-
+debugger
 		if (code) {
 			connectStripeRef.current({ variables: { input: { code } } })
 		} else {

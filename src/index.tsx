@@ -9,10 +9,10 @@ import {
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import { StripeProvider } from 'react-stripe-elements'
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import './styles/index.css';
-
 
 const httpLink = new HttpLink({ uri: '/api' })
 const authMiddleware = new ApolloLink((operation, forward) => {
@@ -32,11 +32,15 @@ const client = new ApolloClient({
 })
 
 ReactDOM.render(
-	<ApolloProvider client={client}>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
-	</ApolloProvider>,
+	<StripeProvider
+		apiKey={process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY as string}
+	>
+		<ApolloProvider client={client}>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		</ApolloProvider>
+	</StripeProvider>,
 	document.getElementById('root')
 )
 

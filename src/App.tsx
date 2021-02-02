@@ -76,23 +76,23 @@ export const App = () => {
 	)
 
 	return (
-		<ViewerProvider value={{ viewer, setViewer }}>
-			<Layout id='app'>
-				{logInErrorBannerElement}
-				<Affix offsetTop={0} className='app__affix-header'>
-					<AppHeader onSearch={onSearch} />
-				</Affix>
-				<Switch>
-					<Route exact path='/' render={() => <Home onSearch={onSearch} />} />
-					<Route path='/host' component={Host} />
-					<Route path='/listing/:id' component={Listing} />
-					<Route path='/listings/:location?' component={Listings} />
-					<Route exact path='/login' component={Login} />
-					<Route exact path='/stripe' component={Stripe} />
-					<Route path='/user/:id' component={User} />
-					<Route component={NotFound} />
-				</Switch>
-			</Layout>
-		</ViewerProvider>
+			<ViewerProvider value={{ viewer, setViewer }}>
+				<Layout id='app'>
+					{logInErrorBannerElement}
+					<Affix offsetTop={0} className='app__affix-header'>
+						<AppHeader onSearch={onSearch} />
+					</Affix>
+					<Switch>
+						<Route exact path='/' render={() => <Home onSearch={onSearch} />} />
+						<Route path='/host' component={Host} />
+						<Route path='/listing/:id' component={Listing} />
+						<Route path='/listings/:location?' component={Listings} />
+						<Route exact path='/login' component={Login} />
+						<Route exact path='/stripe' component={Stripe} />
+						<Route path='/user/:id' component={User} />
+						<Route component={NotFound} />
+					</Switch>
+				</Layout>
+			</ViewerProvider>
 	)
 }
