@@ -27,11 +27,11 @@ type IBookings = {
   result: Array<IBooking>;
 };
 
-type IListingType = 
+type IListingType =
   | 'APARTMENT'
   | 'HOUSE';
 
-type IListingsFilter = 
+type IListingsFilter =
   | 'PRICE_LOW_TO_HIGH'
   | 'PRICE_HIGH_TO_LOW';
 
@@ -99,6 +99,27 @@ type ILogInInput = {
   code: Scalars['String'];
 };
 
+type IConnectStripeInput = {
+  code: Scalars['String'];
+};
+
+type IHostListingInput = {
+  title: Scalars['String'];
+  description: Scalars['String'];
+  image: Scalars['String'];
+  address: Scalars['String'];
+  type: IListingType;
+  price: Scalars['Int'];
+  numOfGuests: Scalars['Int'];
+};
+
+type ICreateBookingInput = {
+  id: Scalars['ID'];
+  source: Scalars['String'];
+  checkIn: Scalars['String'];
+  checkOut: Scalars['String'];
+};
+
 type IQuery = {
   authUrl: Scalars['String'];
   user: IUser;
@@ -124,26 +145,13 @@ type IQueryListingsArgs = {
   limit: Scalars['Int'];
 };
 
-type IConnectStripeInput = {
-  code: Scalars['String'];
-};
-
-type IHostListingInput = {
-  title: Scalars['String'];
-  description: Scalars['String'];
-  image: Scalars['String'];
-  address: Scalars['String'];
-  type: IListingType;
-  price: Scalars['Int'];
-  numOfGuests: Scalars['Int'];
-};
-
 type IMutation = {
   logIn: IViewer;
   logOut: IViewer;
   connectStripe: IViewer;
   disconnectStripe: IViewer;
   hostListing: IListing;
+  createBooking: IBooking;
 };
 
 
@@ -161,7 +169,12 @@ type IMutationHostListingArgs = {
   input: IHostListingInput;
 };
 
-type ICacheControlScope = 
+
+type IMutationCreateBookingArgs = {
+  input: ICreateBookingInput;
+};
+
+type ICacheControlScope =
   | 'PUBLIC'
   | 'PRIVATE';
 
@@ -172,6 +185,13 @@ type IConnectStripeMutationVariables = Exact<{
 
 
 type IConnectStripeMutation = { connectStripe: Pick<IViewer, 'hasWallet'> };
+
+type ICreateBookingMutationVariables = Exact<{
+  input: ICreateBookingInput;
+}>;
+
+
+type ICreateBookingMutation = { createBooking: Pick<IBooking, 'id'> };
 
 type IDisconnectStripeMutationVariables = Exact<{ [key: string]: never; }>;
 

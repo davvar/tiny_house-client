@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client'
-import { Avatar, Button, Tag, Card, Divider, Typography } from 'antd'
+import { Avatar, Button, Card, Divider, Tag, Typography } from 'antd'
 import { DISCONNECT_STRIPE } from 'graphql/mutations'
 import React, { FC } from 'react'
 import {
@@ -9,13 +9,14 @@ import {
 } from 'utils'
 
 const { Paragraph, Text, Title } = Typography
+console.log(process.env)
 
 const stripeAuthUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&scope=read_write`
 interface IProps {
 	user: IUser
 	viewerIsUser: boolean
 	setViewer: React.Dispatch<React.SetStateAction<IViewer>>
-	handleUserRefetch: () => void
+	handleUserRefetch: () => Promise<void>
 }
 
 export const UserProfile: FC<IProps> = ({
